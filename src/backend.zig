@@ -2,6 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const capy = @import("capy.zig");
 const shared = @import("backends/shared.zig");
+const build_options = @import("build_options");
 
 const backend = //if (@hasDecl(@import("root"), "capyBackend"))
     //    @import("root").capyBackend
@@ -13,7 +14,10 @@ const backend = //if (@hasDecl(@import("root"), "capyBackend"))
         if (builtin.target.isAndroid()) {
             break :blk @import("backends/android/backend.zig");
         } else {
-            break :blk @import("backends/gtk/backend.zig");
+            break :blk switch (build_options.linux_backend) {
+                .gtk => @import("backends/gtk/backend.zig"),
+                .qt => @import("backends/qt/backend.zig"),
+            };
         }
     },
     .wasi => blk: {

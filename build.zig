@@ -104,7 +104,26 @@ fn installCapyDependencies(b: *std.Build, module: *std.Build.Module, options: Ca
                 // TODO: find a way to contory ZigAndroidTemplate enough so it fits into the Zig build system
             } else {
                 module.link_libc = true;
-                module.linkSystemLibrary("gtk4", .{});
+
+                switch (options.linux_backend) {
+                    .gtk => {
+                        module.linkSystemLibrary("gtk4", .{});
+                    },
+                    .qt => {
+                        const qt_dep = b.dependency("qt", .{
+                            .target = target,
+                            .optimize = optimize,
+                        });
+
+                        const lib = qt_dep.artifact("QtC6");
+                        module.addIncludePath(qt_dep.path("include"));
+
+                        module.linkLibrary(lib);
+                        module.linkSystemLibrary("Qt6Core", .{});
+                        module.linkSystemLibrary("Qt6Widgets", .{});
+                        module.linkSystemLibrary("Qt6Gui", .{});
+                    },
+                }
             }
         },
         .wasi => {
@@ -131,19 +150,29 @@ fn installCapyDependencies(b: *std.Build, module: *std.Build.Module, options: Ca
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+    const lib_options = b.addOptions();
+
     const app_name = b.option([]const u8, "app_name", "The name of the application, to be used for packaging purposes.");
+    const linux_backend = b.option(CapyBuildOptions.LinuxBackend, "linux_backend", "The UI backend to use for Linux/BSD systems.");
+    lib_options.addOption(CapyBuildOptions.LinuxBackend, "linux_backend", linux_backend orelse .gtk);
 
     const options = CapyBuildOptions{
         .target = target,
         .optimize = optimize,
         .app_name = app_name orelse "Capy Example",
+        .linux_backend = linux_backend orelse .gtk,
     };
 
     const module = b.addModule("capy", .{
         .root_source_file = b.path("src/capy.zig"),
         .target = target,
         .optimize = optimize,
-        .imports = &.{},
+        .imports = &.{
+            .{
+                .name = "build_options",
+                .module = lib_options.createModule(),
+            },
+        },
     });
     try installCapyDependencies(b, module, options);
 

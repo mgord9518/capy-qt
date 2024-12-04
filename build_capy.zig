@@ -17,7 +17,7 @@ pub const CapyBuildOptions = struct {
     // Nothing.
 
     // Linux
-    // Nothing.
+    linux_backend: LinuxBackend,
 
     // Android
     // As of 2022, 95% of Android devices use Android 8 (Oreo) or higher
@@ -29,6 +29,11 @@ pub const CapyBuildOptions = struct {
     // TODO: use optional
     /// The password that will be used to sign the keystore. Do not share with others!
     android_password: []const u8 = "foo",
+
+    pub const LinuxBackend = enum {
+        gtk,
+        qt,
+    };
 };
 
 pub const CapyRunOptions = struct {

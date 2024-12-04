@@ -17,6 +17,10 @@
             .url = "git+https://github.com/zigimg/zigimg#c3bd7f9d593d75c60e70f0a950f499e55bd2a965",
             .hash = "1220a3427cad06407fb07843cf12395de92327dc629281ae17102fe09f5c1ead81c8",
         },
+        .qt = .{
+            // TODO: add URL
+            .path = "../QtC",
+        },
     },
     .paths = .{""},
 }
