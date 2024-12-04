@@ -10,6 +10,7 @@ pub const BackendError = shared.BackendError;
 pub const MouseButton = shared.MouseButton;
 pub const PeerType = *anyopaque;
 
+// TODO: replace with Zig build system when supported
 pub const c = @cImport({
     @cInclude("QtC6/qt.h");
     @cInclude("QtC6/abstractbutton.h");

@@ -115,10 +115,11 @@ fn installCapyDependencies(b: *std.Build, module: *std.Build.Module, options: Ca
                             .optimize = optimize,
                         });
 
-                        const lib = qt_dep.artifact("QtC6");
                         module.addIncludePath(qt_dep.path("include"));
 
+                        const lib = qt_dep.artifact("QtC6");
                         module.linkLibrary(lib);
+
                         module.linkSystemLibrary("Qt6Core", .{});
                         module.linkSystemLibrary("Qt6Widgets", .{});
                         module.linkSystemLibrary("Qt6Gui", .{});

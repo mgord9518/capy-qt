@@ -18,8 +18,10 @@
             .hash = "1220a3427cad06407fb07843cf12395de92327dc629281ae17102fe09f5c1ead81c8",
         },
         .qt = .{
-            // TODO: add URL
-            .path = "../QtC",
+            .url = "git+https://github.com/mgord9518/QtC#95314f0eed5e778e968745b87f9c12163246250d",
+            .hash = "12203a914633ce7ac6d79eeb761afe087717901d69245c9072a95a53a82a9da3e17a",
+
+            //.path = "../QtC",
         },
     },
     .paths = .{""},
